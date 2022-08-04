@@ -1,4 +1,12 @@
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  BelongsToMany,
+  Column,
+  DataType,
+  Model,
+  Table,
+} from 'sequelize-typescript';
+import { RolesModel } from '../roles/roles.model';
+import { UsersRolesModel } from '../roles/users-roles.model';
 
 interface UserCreationAttributes {
   email: string;
@@ -6,7 +14,7 @@ interface UserCreationAttributes {
 }
 
 @Table({ tableName: 'users' })
-export class UserModel extends Model<UserModel, UserCreationAttributes> {
+export class UsersModel extends Model<UsersModel, UserCreationAttributes> {
   @Column({
     type: DataType.INTEGER,
     unique: true,
@@ -34,9 +42,18 @@ export class UserModel extends Model<UserModel, UserCreationAttributes> {
   })
   isBanned: boolean;
 
+  // @Column({
+  //   type: DataType.BOOLEAN,
+  //   defaultValue: false,
+  // })
+  // isAdmin: boolean;
+
   @Column({
     type: DataType.STRING,
     allowNull: true,
   })
   banReason?: string;
+
+  @BelongsToMany(() => RolesModel, () => UsersRolesModel)
+  roles: RolesModel[];
 }
